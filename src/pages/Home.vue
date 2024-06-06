@@ -1,10 +1,8 @@
 <template>
-  <div class="container mx-auto px-4">
-
+  <div>
     <div class="my-4">
-      <Input placeholder="Search" block @input="onSearch"/>
+      <Input placeholder="Search" block @input="onSearch" :value="defaultQuery"/>
     </div>
-
     <div>
       <Table :head="head" :list="store.getBooks">
         <template #thumbnail="{props}">
@@ -19,33 +17,20 @@
         </template>
       </Table>
     </div>
-
   </div>
-
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import Input from '../components/common/Input.vue'
-import Table from '../components/common/Table.vue'
+import { onMounted } from 'vue'
+import Input from '../components/Input.vue'
+import Table from '../components/Table.vue'
 
 import { useBooksStore } from '../stores/books'
-
 import { debounce } from '../utils'
 
 const store = useBooksStore()
 
-const onSearch = debounce((event: InputEvent) => {
-  const query = (event.target as HTMLInputElement).value
-  if(!query.length) {
-    return
-  }
-  store.fetchBooks(query)
-})
-
-onMounted(() => {
-  store.fetchBooks('programming')
-})
+const defaultQuery = 'programming'
 
 const head = [
   {
@@ -61,4 +46,17 @@ const head = [
     field: 'authors',
   }
 ]
+
+const onSearch = debounce((event: InputEvent) => {
+  const query = (event.target as HTMLInputElement).value
+  if(!query.length) {
+    return
+  }
+  store.fetchBooks(query)
+})
+
+onMounted(() => {
+  store.fetchBooks(defaultQuery)
+})
+
 </script>
