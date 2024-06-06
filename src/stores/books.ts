@@ -6,22 +6,29 @@ interface Book {
   title: string
   authors: string
   thumbnail: string
+  description?: string
 }
 
 interface State {
+  book: Book
   books: Book[]
 }
 
 export const useBooksStore = defineStore('books', {
   state: () => {
     return {
+      book: {
+        id: '',
+        title: '',
+        authors: '',
+        thumbnail: ''
+      },
       books: []
     } as State
   },
   getters: {
-    getBooks(state) {
-      return state.books
-    }
+    getBooks: (state) => state.books, 
+    getBook: (state) => state.book
   },
   actions: {
     async fetchBooks(query: string) {
@@ -32,6 +39,16 @@ export const useBooksStore = defineStore('books', {
         authors: item.volumeInfo.authors?.join(', '),
         thumbnail: item.volumeInfo.imageLinks?.smallThumbnail,
       }))
+    },
+    async fetchBookById(id: string) {
+      const { data } = await http.get(`/volumes/${id}`)
+      this.book = {
+        id: data.id,
+        title: data.volumeInfo.title,
+        authors: data.volumeInfo.authors?.join(', '),
+        thumbnail: data.volumeInfo.imageLinks?.thumbnail,
+        description: data.volumeInfo.description 
+      }
     }
   }
 })
