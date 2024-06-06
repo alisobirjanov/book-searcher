@@ -12,6 +12,9 @@ export default createRouter({
     {
       name: 'login',
       path: '/login',
+      meta: {
+        layout: 'empty'
+      },
       component: () => import('./pages/Login.vue')
     },
     {
