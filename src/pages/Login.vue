@@ -56,6 +56,6 @@ async function onSubmit() {
   isLoading.value = true
   await sleep(3000)
   isLoading.value = false
- router.push({name: 'home'})
+  router.push({name: 'home'})
 }
 </script>
